@@ -1,0 +1,16 @@
+# First line: short and imperative. Max ~70 chars.
+
+<type a short summary here>
+
+# Empty line required above. Do not remove it.
+
+# Detailed description:
+# - Explain what was changed and why.
+# - Provide context and motivation.
+# - Mention edge cases or side effects.
+# - Bullet points are welcome for clarity.
+#
+# If the change is trivial, the body can remain empty.
+
+<add a detailed explanation here if needed>
+
