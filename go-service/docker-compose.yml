@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: school-mgmt-postgres
+    environment:
+      POSTGRES_DB: school_mgmt
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      # SQL init scripts (run once on first volume init)
+      - ../seed_db/tables.sql:/docker-entrypoint-initdb.d/01_tables.sql:ro
+      - ../seed_db/seed-db.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d school_mgmt"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  node-backend:
+    image: node:18-alpine
+    container_name: school-mgmt-node
+    working_dir: /app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5007:5007"
+    environment:
+      PORT: "5007"
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/school_mgmt"
+
+      # Minimal set to boot locally (can be any non-empty strings for dev)
+      JWT_ACCESS_TOKEN_SECRET: "dev_access_secret"
+      JWT_REFRESH_TOKEN_SECRET: "dev_refresh_secret"
+      CSRF_TOKEN_SECRET: "dev_csrf_secret"
+      EMAIL_VERIFICATION_TOKEN_SECRET: "dev_email_verify_secret"
+      PASSWORD_SETUP_TOKEN_SECRET: "dev_password_setup_secret"
+
+      JWT_ACCESS_TOKEN_TIME_IN_MS: "900000"
+      JWT_REFRESH_TOKEN_TIME_IN_MS: "28800000"
+      CSRF_TOKEN_TIME_IN_MS: "950000"
+      EMAIL_VERIFICATION_TOKEN_TIME_IN_MS: "18000000"
+      PASSWORD_SETUP_TOKEN_TIME_IN_MS: "300000"
+
+      API_URL: "http://localhost:5007"
+      UI_URL: "http://localhost:5173"
+      COOKIE_DOMAIN: "localhost"
+      RESEND_API_KEY: "dev_resend_api_key"
+      MAIL_FROM_USER: "dev@example.com"
+    volumes:
+      - ../react-node/backend:/app
+    command: sh -lc "npm install && npm start"
+
+volumes:
+  pg_data:

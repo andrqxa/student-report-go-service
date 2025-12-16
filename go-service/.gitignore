@@ -4,11 +4,9 @@
 *.a
 *.so
 *.exe
-**/*.exe
 *.exe~
 *.dll
 *.dylib
-.idea/
 
 # Folders
 _obj
@@ -50,13 +48,8 @@ _testmain.go
 
 # === Project specific ===
 .env
-/*.json
-/tmp
+/tmp/
 Notes.md
 
 # Ignore build output
-/go-service
-/go-service.exe
-
-# === Docker specific ===
-**/seed_db/*
+bin/
