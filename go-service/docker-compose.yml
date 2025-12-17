@@ -1,19 +1,20 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:15-alpine
     container_name: school-mgmt-postgres
     env_file:
       - .env
+    environment:
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
-      # SQL init scripts (executed on first init)
       - ./seed_db:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER} -d ${PG_DB}"]
       interval: 3s
       timeout: 3s
       retries: 30
@@ -24,6 +25,27 @@ services:
     working_dir: /app
     env_file:
       - .env
+    environment:
+      PORT: ${NODE_PORT}
+      DATABASE_URL: ${NODE_DATABASE_URL}
+
+      JWT_ACCESS_TOKEN_SECRET: ${NODE_JWT_ACCESS_TOKEN_SECRET}
+      JWT_REFRESH_TOKEN_SECRET: ${NODE_JWT_REFRESH_TOKEN_SECRET}
+      CSRF_TOKEN_SECRET: ${NODE_CSRF_TOKEN_SECRET}
+      EMAIL_VERIFICATION_TOKEN_SECRET: ${NODE_EMAIL_VERIFICATION_TOKEN_SECRET}
+      PASSWORD_SETUP_TOKEN_SECRET: ${NODE_PASSWORD_SETUP_TOKEN_SECRET}
+
+      JWT_ACCESS_TOKEN_TIME_IN_MS: ${NODE_JWT_ACCESS_TOKEN_TIME_IN_MS}
+      JWT_REFRESH_TOKEN_TIME_IN_MS: ${NODE_JWT_REFRESH_TOKEN_TIME_IN_MS}
+      CSRF_TOKEN_TIME_IN_MS: ${NODE_CSRF_TOKEN_TIME_IN_MS}
+      EMAIL_VERIFICATION_TOKEN_TIME_IN_MS: ${NODE_EMAIL_VERIFICATION_TOKEN_TIME_IN_MS}
+      PASSWORD_SETUP_TOKEN_TIME_IN_MS: ${NODE_PASSWORD_SETUP_TOKEN_TIME_IN_MS}
+
+      API_URL: ${NODE_API_URL}
+      UI_URL: ${NODE_UI_URL}
+      COOKIE_DOMAIN: ${NODE_COOKIE_DOMAIN}
+
+      DISABLE_AUTH: ${NODE_DISABLE_AUTH}
     depends_on:
       postgres:
         condition: service_healthy
