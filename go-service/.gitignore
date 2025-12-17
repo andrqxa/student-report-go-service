@@ -50,6 +50,7 @@ _testmain.go
 .env
 /tmp/
 Notes.md
+cookies.txt
 
 # Ignore build output
 bin/

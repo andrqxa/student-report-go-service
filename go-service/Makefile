@@ -80,4 +80,5 @@ deps-logs:
 
 check-node:
 	@echo "▶ Checking Node backend..."
-	@curl -fsS http://localhost:5007/api/v1/students/1 >/dev/null && echo "OK" || (echo "FAILED"; exit 1)
+	@curl -fsS --max-time 3 http://127.0.0.1:5007/api/v1/students/1 >/dev/null \
+	  && echo "OK" || (echo "FAILED"; exit 1)
