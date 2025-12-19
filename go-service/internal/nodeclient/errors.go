@@ -21,6 +21,8 @@ var (
 	ErrForbidden = errors.New("forbidden")
 	// ErrServerError indicates a server-side error occurred (5xx).
 	ErrServerError = errors.New("server error")
+	// ErrUpstream indicates that the upstream service returned a 5xx response.
+	ErrUpstream = errors.New("upstream service error")
 )
 
 // HTTPError represents an HTTP error response with status code and body details.
