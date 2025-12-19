@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go-service/internal/nodeclient"
+	"go-service/internal/pdf"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -40,7 +41,6 @@ func (h *reportHandler) getStudentReport(w http.ResponseWriter, r *http.Request)
 	}
 
 	pdfBytes, err := pdf.Generate(student)
-	// TODO: Implement Genereate
 	if err != nil {
 		h.log.Error("pdf_generation_failed", "student_id", id, "err", err)
 		writeJSONError(w, http.StatusInternalServerError, "failed to generate pdf")
