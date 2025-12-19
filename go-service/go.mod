@@ -2,4 +2,8 @@ module go-service
 
 go 1.25.4
 
-require github.com/joho/godotenv v1.5.1 // indirect
+require (
+	github.com/go-chi/chi/v5 v5.2.3 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
+	github.com/jung-kurt/gofpdf v1.16.2 // indirect
+)
